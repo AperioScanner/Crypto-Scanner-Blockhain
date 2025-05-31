@@ -1,7 +1,7 @@
 # 🚀 Aperio — The Ultimate Bitcoin Explorer & Wallet Scanner Chrome Extension
 
-![Aperio Logo](./icons/aperio-logo.png) <!-- Cambia por la ruta correcta del logo -->
-
+ <!-- Cambia por la ruta correcta del logo -->
+![Aperio Logo]() <img src="./icons/aperio-logo.png" alt="Aperio Logo" width="150"/>
 **Aperio** is a powerful and lightweight [Bitcoin block explorer](https://en.bitcoin.it/wiki/Block_explorer) & address scanner built as a browser extension for Google Chrome and Chromium-based browsers. Forget jumping between websites like mempool.space or blockchain.com — **scan any Bitcoin address instantly by simply highlighting the text and clicking the "Scan" button.**
 
 Aperio is the fastest and simplest way to get real-time Bitcoin wallet balance information — right from your browser.
@@ -50,22 +50,18 @@ Aperio is the fastest and simplest way to get real-time Bitcoin wallet balance i
 Aperio queries the blockchain.com public API to retrieve live wallet data.  
 It does not require you to run a full node and never accesses private keys.
 
----
+Aperio fetches data from the **blockchain.com public API** in real time:
 
-## 📡 SEO Keywords Targeted
-
-**Bitcoin Explorer**, **Bitcoin Explorer Address**, **BTC Explorer API**, **Scan Bitcoin**,  
-**Bitcoin Scanner Online**, **Bitcoin Wallet Scanner GitHub**, **Blockchain Explorer Download**,  
-**Bitcoin Public Key Explorer**, **Crypto Scanner**, **Free Crypto Scanner**, and many more...
+const apiUrl = `https://blockchain.info/balance?active=${address}`;
+console.log(`[Cache Miss/Stale] Making API request for ${address} from URL: ${apiUrl}`); 
 
 ---
-
 ## 💡 Use Cases
 
 - Check balances before sending or receiving Bitcoin  
 - Verify payments on the fly  
 - Quickly analyze wallets with just a highlight  
-- Replace the need for clunky blockchain explorers  
+- Replace the need for clunky blockchain explorers
 
 ---
 
@@ -89,3 +85,9 @@ Stay tuned for future updates and new crypto scanning features.
 MIT License — Free to use, modify, and share.
 
 ---
+
+## 📡 SEO Keywords Targeted
+
+**Bitcoin Explorer**, **Bitcoin Explorer Address**, **BTC Explorer API**, **Scan Bitcoin**,  
+**Bitcoin Scanner Online**, **Bitcoin Wallet Scanner GitHub**, **Blockchain Explorer Download**,  
+**Bitcoin Public Key Explorer**, **Crypto Scanner**, **Free Crypto Scanner**, and many more...
