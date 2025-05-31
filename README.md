@@ -32,6 +32,9 @@ Aperio is the fastest and simplest way to get real-time Bitcoin wallet balance i
 
 ## 🎬 How It Works
 
+### 🛠️ Installation Demo
+![Installation Instructions](./aperio-install.gif) <!-- GIF de 15 segundos -->
+
 ### 📽️ Usage Demo
 
 1. Highlight any Bitcoin address on a webpage  
@@ -39,9 +42,6 @@ Aperio is the fastest and simplest way to get real-time Bitcoin wallet balance i
 3. Instantly view the balance from the blockchain
 
 ![How to Use Aperio](GIFs/how-to-use.gif) <!-- GIF de 5 segundos -->
-
-### 🛠️ Installation Demo
-![Installation Instructions](./aperio-install.gif) <!-- GIF de 15 segundos -->
 
 ---
 
