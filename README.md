@@ -1,6 +1,6 @@
 # 🚀 Aperio — The Ultimate Bitcoin Explorer & Wallet Scanner Chrome Extension
 
-![Aperio Logo](./logo.png) <!-- Cambia por la ruta correcta del logo -->
+![Aperio Logo](./icons/aperio-logo.png) <!-- Cambia por la ruta correcta del logo -->
 
 **Aperio** is a powerful and lightweight [Bitcoin block explorer](https://en.bitcoin.it/wiki/Block_explorer) & address scanner built as a browser extension for Google Chrome and Chromium-based browsers. Forget jumping between websites like mempool.space or blockchain.com — **scan any Bitcoin address instantly by simply highlighting the text and clicking the "Scan" button.**
 
