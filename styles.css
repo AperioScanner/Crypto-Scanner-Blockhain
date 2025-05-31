@@ -1,0 +1,104 @@
+.retro-block-style {
+    border: 3px solid black;
+    box-shadow: 6px 6px 0 0 black;
+    border-radius: 5px;
+}
+
+.custom-selector-button {
+    background-color: #ffee32;
+    color: #000000;
+    padding: 5px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    z-index: 99999;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+
+    border: 3px solid black;
+    box-shadow: 6px 6px 0 0 black;
+    border-radius: 5px;
+
+    transition: box-shadow 0.1s ease, transform 0.1s ease, background-color 0.1s ease;
+}
+
+.custom-selector-button:hover {
+    background-color: #f7e62a;
+    box-shadow: 3px 3px 0 0 black;
+    transform: translate(3px, 3px);
+}
+
+.custom-selector-popup {
+    background-color: #ffee32;
+    padding: 0;
+    position: absolute;
+    z-index: 100000;
+    width: auto;
+    min-width: 280px;
+    max-width: 450px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+
+    border: 3px solid black;
+    box-shadow: 6px 6px 0 0 black;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.custom-selector-popup-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-bottom: 3px solid black;
+    color: #000000;
+}
+
+.custom-selector-popup-header .circle {
+    width: 8px;
+    height: 8px;
+    background-color: #000000;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.custom-selector-popup-header h3 {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.custom-selector-popup-content {
+    background-color: #ffffff;
+    padding: 15px;
+    color: #000000;
+}
+
+.custom-selector-popup-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    color: #000000;
+    text-align: left;
+}
+
+.custom-selector-popup-content p strong {
+    word-break: break-all;
+    font-weight: bold;
+}
+
+.custom-selector-popup .loading-message,
+.custom-selector-popup .error-message {
+    text-align: left;
+    font-style: italic;
+    color: #666;
+    margin-top: 10px;
+}
+
+.custom-selector-popup .error-message {
+    color: #d9534f;
+}
