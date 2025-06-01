@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Effective Date:** [Insert today's date]
+**Effective Date:** 01 june, 2025
 
 ## Introduction
 
