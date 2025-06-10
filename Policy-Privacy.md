@@ -46,5 +46,7 @@ This policy may be updated if functionality changes. Users are encouraged to rev
 
 If you have any questions or concerns regarding this privacy policy, feel free to contact the developer:
 
+`Ophaniel1@protonmail.com`
+
 **Made with ❤️ by Mickey Boreal**  
 [GitHub Repository](https://github.com/AperioScanner/Crypto-Scanner-Blockhain)
