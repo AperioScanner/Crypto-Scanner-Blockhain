@@ -1,11 +1,16 @@
 {
+    "update_url": "https://clients2.google.com/service/update2/crx",
     "manifest_version": 3,
-    "name": "Aperio - Crypto Scanner Blockchain",
-    "version": "1.1.0",
-    "description": "Displays the balance of a selected Bitcoin address.",
-    "permissions": [],
+    "name": "🚀 Aperio — The Ultimate Bitcoin Explorer & Wallet Scanner Chrome Extension",
+    "version": "1.1.2",
+    "description": "Displays the balance of a selected Bitcoin or Ethereum address.",
+    "permissions": [
+        "storage"
+    ],
     "host_permissions": [
-    "https://blockchain.info/*"
+        "https://blockchain.info/*",
+        "https://api.blockcypher.com/*",
+        "https://www.google-analytics.com/*"
     ],
     "content_scripts": [
         {
