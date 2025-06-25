@@ -18,13 +18,23 @@ function cleanupUI() {
     }
 }
 
-function isBitcoinAddress(address) {
+function detectCryptoAddressType(address) {
     const lowerAddress = address.toLowerCase();
+
+    // Bitcoin RegEx (P2PKH, P2SH, Bech32)
     const p2pkhRegex = /^[1][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
     const p2shRegex = /^[3][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
     const bech32Regex = /^bc1[0-9a-z]{39,87}$/;
 
-    return p2pkhRegex.test(address) || p2shRegex.test(address) || bech32Regex.test(lowerAddress);
+    // Ethereum RegEx (0x followed by 40 hex characters)
+    const ethereumRegex = /^0x[a-fA-F0-9]{40}$/;
+
+    if (p2pkhRegex.test(address) || p2shRegex.test(address) || bech32Regex.test(lowerAddress)) {
+        return 'bitcoin';
+    } else if (ethereumRegex.test(address)) {
+        return 'ethereum';
+    }
+    return null;
 }
 
 document.addEventListener('mouseup', (event) => {
@@ -36,8 +46,9 @@ document.addEventListener('mouseup', (event) => {
 
     const selection = window.getSelection();
     currentSelection = selection.toString().trim();
+    const addressType = detectCryptoAddressType(currentSelection);
 
-    if (currentSelection.length > 0 && !selection.isCollapsed && isBitcoinAddress(currentSelection)) {
+    if (currentSelection.length > 0 && !selection.isCollapsed && addressType) {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
 
@@ -56,17 +67,26 @@ document.addEventListener('mouseup', (event) => {
         selectionButton.style.top = `${buttonY}px`;
         selectionButton.style.display = 'block';
 
-        console.log("Button 'Scan' created and positioned for:", currentSelection);
+        console.log(`Button 'Scan' created and positioned for ${addressType} address:`, currentSelection);
 
         selectionButton.addEventListener('click', (clickEvent) => {
             clickEvent.stopPropagation();
 
-            console.log("Button 'Scan' clicked. Calling showMainPopup.");
-            showMainPopup(rect, currentSelection);
+            console.log(`Button 'Scan' clicked for ${addressType} address. Calling showMainPopup.`);
+            chrome.runtime.sendMessage({
+                type: 'ANALYTICS_EVENT',
+                eventName: 'scan_button_click',
+                eventParams: {
+                    crypto_address: currentSelection,
+                    address_type: addressType
+                }
+            });
+
+            showMainPopup(rect, currentSelection, addressType);
         });
 
     } else {
-        console.log("No valid Bitcoin address selected, or selection is empty. No button shown.");
+        console.log("No valid crypto address selected, or selection is empty. No button shown.");
     }
 });
 
@@ -78,8 +98,8 @@ document.addEventListener('mousedown', (event) => {
     cleanupUI();
 });
 
-async function showMainPopup(selectionRect, text) {
-    console.log("Entering showMainPopup function for address:", text);
+async function showMainPopup(selectionRect, address, type) {
+    console.log(`Entering showMainPopup function for ${type} address:`, address);
 
     if (mainPopup) {
         mainPopup.remove();
@@ -94,10 +114,10 @@ async function showMainPopup(selectionRect, text) {
             <span class="circle"></span>
             <span class="circle"></span>
             <span class="circle"></span>
-            <h3>Bitcoin Address Detected</h3>
+            <h3>${type === 'bitcoin' ? 'Bitcoin Address Detected' : 'Ethereum Address Detected'}</h3>
         </div>
         <div class="custom-selector-popup-content">
-            <p>Address: <strong>${text}</strong></p>
+            <p>Address: <strong>${address}</strong></p>
             <p class="loading-message">Loading balance...</p>
         </div>
     `;
@@ -128,14 +148,14 @@ async function showMainPopup(selectionRect, text) {
 
     console.log("Sending message to background script to get balance...");
     try {
-        const response = await chrome.runtime.sendMessage({ type: 'GET_BALANCE', address: text });
+        const response = await chrome.runtime.sendMessage({ type: 'GET_BALANCE', address: address, addressType: type });
         console.log("Received raw response from background script:", response);
 
         if (response && typeof response === 'object' && 'status' in response && response.status === 'success') {
             if (popupContentArea) {
                 popupContentArea.innerHTML = `
                     <p>Address: <strong>${response.address}</strong></p>
-                    <p>Balance: <strong>${response.balance.toFixed(8)} BTC</strong></p>
+                    <p>Balance: <strong>${response.balance.toFixed(8)} ${response.type.toUpperCase() === 'BITCOIN' ? 'BTC' : 'ETH'}</strong></p>
                     <p>Transactions: <strong>${response.n_tx}</strong></p>
                 `;
                 console.log("Popup content updated with success message.");
@@ -146,7 +166,7 @@ async function showMainPopup(selectionRect, text) {
                 : 'Unexpected or incomplete response from background service.';
             if (popupContentArea) {
                 popupContentArea.innerHTML = `
-                    <p>Address: <strong>${response ? response.address : text}</strong></p>
+                    <p>Address: <strong>${response ? response.address : address}</strong></p>
                     <p class="error-message">${errorMessage}</p>
                 `;
                 console.error("Popup content updated with error message from background:", errorMessage);
@@ -166,7 +186,7 @@ async function showMainPopup(selectionRect, text) {
 
         if (popupContentArea) {
             popupContentArea.innerHTML = `
-                <p>Address: <strong>${text}</strong></p>
+                <p>Address: <strong>${address}</strong></p>
                 <p class="error-message">${displayErrorMessage}</p>
             `;
             console.error("Popup content updated with generic error message from catch block.");
