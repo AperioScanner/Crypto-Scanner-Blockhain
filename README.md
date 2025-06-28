@@ -25,9 +25,7 @@ Aperio is the fastest and simplest way to get real-time Bitcoin or Ethereum wall
 
 ## 📥 Install Aperio
 
-> **[🔗 Add to Chrome](#)** <!-- Reemplaza este enlace cuando tengas el link oficial -->
-
-1. Visit the [Chrome Web Store](#) *(coming soon)*  
+1. Visit the [Aperio Chrome Web Store]([#](https://chromewebstore.google.com/detail/%F0%9F%9A%80-aperio-%E2%80%94-the-ultimate/kpgggnlfkgihhpgaanhjmpbemobndbgn)) 
 2. Click “Add to Chrome”  
 3. Pin Aperio to your extensions bar  
 
