@@ -1,4 +1,4 @@
-console.log("Content script for Bitcoin Scanner loaded!");
+console.log("Content script for Crypto Scanner loaded!");
 
 let selectionButton = null;
 let mainPopup = null;
@@ -19,21 +19,38 @@ function cleanupUI() {
 }
 
 function detectCryptoAddressType(address) {
+    console.log("Attempting to detect type for address:", address); 
     const lowerAddress = address.toLowerCase();
 
-    // Bitcoin RegEx (P2PKH, P2SH, Bech32)
     const p2pkhRegex = /^[1][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
     const p2shRegex = /^[3][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
     const bech32Regex = /^bc1[0-9a-z]{39,87}$/;
 
-    // Ethereum RegEx (0x followed by 40 hex characters)
     const ethereumRegex = /^0x[a-fA-F0-9]{40}$/;
 
+    const bchCashAddrPrefixedRegex = /^bitcoincash:([qQpP])([0-9a-z]{41})$/;
+    const bchCashAddrUnprefixedRegex = /^([qQpP])([0-9a-z]{41})$/; 
+
+    if (bchCashAddrPrefixedRegex.test(lowerAddress)) {
+        console.log("Detected as Bitcoin Cash (prefixed).");
+        return 'bitcoincash';
+    }
+    if (bchCashAddrUnprefixedRegex.test(lowerAddress)) {
+        console.log("Detected as Bitcoin Cash (unprefixed).");
+        return 'bitcoincash';
+    }
+
     if (p2pkhRegex.test(address) || p2shRegex.test(address) || bech32Regex.test(lowerAddress)) {
+        console.log("Detected as Bitcoin.");
         return 'bitcoin';
-    } else if (ethereumRegex.test(address)) {
+    }
+
+    if (ethereumRegex.test(address)) {
+        console.log("Detected as Ethereum.");
         return 'ethereum';
     }
+
+    console.log("No known crypto address format detected for:", address);
     return null;
 }
 
@@ -46,7 +63,7 @@ document.addEventListener('mouseup', (event) => {
 
     const selection = window.getSelection();
     currentSelection = selection.toString().trim();
-    const addressType = detectCryptoAddressType(currentSelection);
+    const addressType = detectCryptoAddressType(currentSelection); 
 
     if (currentSelection.length > 0 && !selection.isCollapsed && addressType) {
         const range = selection.getRangeAt(0);
@@ -73,15 +90,6 @@ document.addEventListener('mouseup', (event) => {
             clickEvent.stopPropagation();
 
             console.log(`Button 'Scan' clicked for ${addressType} address. Calling showMainPopup.`);
-            chrome.runtime.sendMessage({
-                type: 'ANALYTICS_EVENT',
-                eventName: 'scan_button_click',
-                eventParams: {
-                    crypto_address: currentSelection,
-                    address_type: addressType
-                }
-            });
-
             showMainPopup(rect, currentSelection, addressType);
         });
 
@@ -109,12 +117,21 @@ async function showMainPopup(selectionRect, address, type) {
     mainPopup = document.createElement('div');
     mainPopup.className = 'custom-selector-popup';
 
+    let popupTitle = 'Address Detected';
+    if (type === 'bitcoin') {
+        popupTitle = 'Bitcoin Address Detected';
+    } else if (type === 'ethereum') {
+        popupTitle = 'Ethereum Address Detected';
+    } else if (type === 'bitcoincash') {
+        popupTitle = 'Bitcoin Cash Address Detected';
+    }
+
     mainPopup.innerHTML = `
         <div class="custom-selector-popup-header">
             <span class="circle"></span>
             <span class="circle"></span>
             <span class="circle"></span>
-            <h3>${type === 'bitcoin' ? 'Bitcoin Address Detected' : 'Ethereum Address Detected'}</h3>
+            <h3>${popupTitle}</h3>
         </div>
         <div class="custom-selector-popup-content">
             <p>Address: <strong>${address}</strong></p>
@@ -153,9 +170,19 @@ async function showMainPopup(selectionRect, address, type) {
 
         if (response && typeof response === 'object' && 'status' in response && response.status === 'success') {
             if (popupContentArea) {
+                let usdDisplay = '';
+                if (typeof response.usdValue === 'number') {
+                    const formattedUSD = response.usdValue.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    const usdClass = response.usdValue > 0 ? 'positive' : 'zero';
+                    usdDisplay = ` (<span class="balance-usd-value ${usdClass}">USD ${formattedUSD}</span>)`;
+                }
+
                 popupContentArea.innerHTML = `
                     <p>Address: <strong>${response.address}</strong></p>
-                    <p>Balance: <strong>${response.balance.toFixed(8)} ${response.type.toUpperCase() === 'BITCOIN' ? 'BTC' : 'ETH'}</strong></p>
+                    <p>Balance: <strong>${response.balance.toFixed(8)} ${response.currencySymbol}${usdDisplay}</strong></p>
                     <p>Transactions: <strong>${response.n_tx}</strong></p>
                 `;
                 console.log("Popup content updated with success message.");
