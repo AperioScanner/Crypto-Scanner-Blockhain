@@ -91,6 +91,19 @@
     font-weight: bold;
 }
 
+
+.balance-usd-value {
+    font-weight: bold;
+}
+
+.balance-usd-value.positive {
+    color: #28a745;
+}
+
+.balance-usd-value.zero {
+    color: #000000;
+}
+
 .custom-selector-popup .loading-message,
 .custom-selector-popup .error-message {
     text-align: left;
